@@ -4,20 +4,17 @@ import eventlet
 from flask import Flask, render_template
 from flask_socketio import SocketIO, send, emit
 from time import sleep
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'sekr1t'
-socketio = SocketIO(app)
+from app import app, sio
 
 
-@socketio.on('echo-back')
+@sio.on('echo-back')
 def handle_message(client, message):
     string = 'got message "{}" from {}'.format(message, client)
     print(string)
     return string
 
 
-@socketio.on('async-echo-back')
+@sio.on('async-echo-back')
 def handle_async_message(client, message):
     string = 'got message "{}" from {}'.format(message, client)
     print(string)
@@ -51,4 +48,4 @@ def accounts():
 
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    sio.run(app, debug=True)

@@ -1,9 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin
-from main import app
-
-db = SQLAlchemy(app)
-lm = LoginManager(app)
+from flask_login import UserMixin
+from app import db, lm
 
 
 class User(UserMixin, db.Model):
