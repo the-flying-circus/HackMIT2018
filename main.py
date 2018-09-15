@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import eventlet
-from flask import Flask
+from flask import Flask, render_template
 from flask_socketio import SocketIO, send, emit
 from time import sleep
 
@@ -23,6 +23,11 @@ def handle_async_message(client, message):
     print(string)
     sleep(5)
     emit('async back', string)
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 
 if __name__ == '__main__':
