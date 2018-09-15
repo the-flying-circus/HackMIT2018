@@ -4,6 +4,7 @@ from rauth import OAuth1Service, OAuth2Service
 from flask import current_app, url_for, request, redirect, session
 from services.secrets import FB_ID, FB_SECRET
 
+
 class OAuthSignIn(object):
     providers = None
 
@@ -67,7 +68,7 @@ class FacebookSignIn(OAuthSignIn):
         return (
             'facebook$' + me['id'],
             me.get('email').split('@')[0],  # Facebook does not provide
-                                            # username, so the email's user
-                                            # is used instead
+            # username, so the email's user
+            # is used instead
             me.get('email')
         )
