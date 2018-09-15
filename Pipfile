@@ -9,6 +9,6 @@ sqlalchemy = "*"
 requests = "*"
 eventlet = "*"
 flask-socketio = "*"
-pipfile = "*"
+flask-wtf = "*"
 
 [dev-packages]
