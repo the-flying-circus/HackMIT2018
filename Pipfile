@@ -10,5 +10,9 @@ requests = "*"
 eventlet = "*"
 flask-socketio = "*"
 flask-wtf = "*"
+flask-sqlalchemy = "*"
+flask-security = "*"
+flask-login = "*"
+rauth = "*"
 
 [dev-packages]

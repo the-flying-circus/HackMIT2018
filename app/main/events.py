@@ -27,4 +27,3 @@ def left(message):
     room = session.get('room')
     leave_room(room)
     emit('status', {'msg': session.get('name') + ' has left the room.'}, room=room)
-
