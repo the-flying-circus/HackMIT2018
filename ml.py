@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import requests
 from pprint import pprint
 
