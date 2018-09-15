@@ -18,3 +18,17 @@
     overflow-y: auto;
     margin-bottom: 15px;
 }
+
+#gifs {
+    display: none;
+    position: absolute;
+    width: 500px;
+    height: 300px;
+    overflow-y: auto;
+}
+
+#gifs img {
+    display: inline-block;
+    vertical-align: top;
+    margin: 5px;
+}
