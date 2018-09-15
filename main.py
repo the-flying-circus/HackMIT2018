@@ -45,5 +45,10 @@ def help():
     return render_template("help.html")
 
 
+@app.route("/accounts")
+def accounts():
+    return render_template("accounts.html")
+
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)
