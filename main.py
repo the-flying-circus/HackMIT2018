@@ -13,11 +13,6 @@ from routes import sio_test_routes, main_routes
 from services.secrets import GIPHY_KEY
 
 
-@app.route("/gifs")
-def gifs():
-    query = request.args.get("q")
-
-
 @functools.lru_cache(maxsize=16)
 def get_gifs(query):
     if not query:
