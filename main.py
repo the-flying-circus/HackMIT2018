@@ -6,7 +6,7 @@ from flask_socketio import SocketIO, send, emit
 from time import sleep
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'sekrit'
+app.config['SECRET_KEY'] = 'sekr1t'
 socketio = SocketIO(app)
 
 
