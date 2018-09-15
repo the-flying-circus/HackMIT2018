@@ -1,0 +1,20 @@
+#output .msg {
+    display: inline-block;
+    float: right;
+    padding: 5px 8px;
+    border-radius: 3px;
+    background-color: #ccc;
+    margin: 5px;
+}
+
+#output .msg.other {
+    float: left;
+    background-color: #2E7D32;
+    color: white;
+}
+
+#output {
+    height: 600px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
