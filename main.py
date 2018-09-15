@@ -2,11 +2,28 @@
 
 import eventlet
 from flask import Flask
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, send, emit
+from time import sleep
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sekrit'
 socketio = SocketIO(app)
+
+
+@socketio.on('echo-back')
+def handle_message(client, message):
+    string = 'got message "{}" from {}'.format(message, client)
+    print(string)
+    return string
+
+
+@socketio.on('async-echo-back')
+def handle_async_message(client, message):
+    string = 'got message "{}" from {}'.format(message, client)
+    print(string)
+    sleep(5)
+    emit('async back', string)
+
 
 if __name__ == '__main__':
     socketio.run(app)
