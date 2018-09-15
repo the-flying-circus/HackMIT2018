@@ -45,9 +45,9 @@ def help():
     return render_template("help.html")
 
 
-@app.route("/accounts")
+@app.route("/account")
 def accounts():
-    return render_template("accounts.html")
+    return render_template("account.html")
 
 
 if __name__ == '__main__':
