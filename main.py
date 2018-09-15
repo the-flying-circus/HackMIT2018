@@ -58,9 +58,9 @@ def accounts():
 def gifs():
     query = request.args.get("q")
     if not query:
-        return jsonify({"data": []})
-
-    resp = requests.get("https://api.giphy.com/v1/gifs/search", params={"api_key": GIPHY_KEY, "q": query})
+        resp = requests.get("https://api.giphy.com/v1/gifs/trending", params={"api_key": GIPHY_KEY})
+    else:
+        resp = requests.get("https://api.giphy.com/v1/gifs/search", params={"api_key": GIPHY_KEY, "q": query})
     resp.raise_for_status()
     return jsonify({
         "data": [x["images"]["preview_gif"]["url"] for x in resp.json()["data"]]
