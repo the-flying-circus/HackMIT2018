@@ -35,5 +35,15 @@ def chat():
     return render_template("chat.html")
 
 
+@app.route("/resources")
+def resources():
+    return render_template("resources.html")
+
+
+@app.route("/help")
+def help():
+    return render_template("help.html")
+
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)
