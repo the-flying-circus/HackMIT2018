@@ -8,7 +8,7 @@ from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, send, emit
 from time import sleep
 from app import app, sio
-from routes import sio_test_routes, main_routes
+from routes import sio_test_routes, main_routes, auth_routes
 
 from services.secrets import GIPHY_KEY
 
@@ -28,12 +28,6 @@ def get_gifs(query):
     return {
         "data": [x["images"]["preview_gif"]["url"] for x in resp.json()["data"]]
     }
-
-
-@app.route("/gifs")
-def gifs():
-    query = request.args.get("q")
-    return jsonify(get_gifs(query))
 
 
 if __name__ == '__main__':
