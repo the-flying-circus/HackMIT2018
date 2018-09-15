@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 
 import eventlet
-from flask import Flask, render_template
+import requests
+
+from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, send, emit
 from time import sleep
+
+from services.secrets import GIPHY_KEY
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sekr1t'
@@ -48,6 +52,19 @@ def help():
 @app.route("/account")
 def accounts():
     return render_template("account.html")
+
+
+@app.route("/gifs")
+def gifs():
+    query = request.args.get("q")
+    if not query:
+        return jsonify({"data": []})
+
+    resp = requests.get("https://api.giphy.com/v1/gifs/search", params={"api_key": GIPHY_KEY, "q": query})
+    resp.raise_for_status()
+    return jsonify({
+        "data": [x["images"]["preview_gif"]["url"] for x in resp.json()["data"]]
+    })
 
 
 if __name__ == '__main__':
