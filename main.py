@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import eventlet
 from flask import Flask
 from flask_socketio import SocketIO
