@@ -25,3 +25,18 @@ def help():
 @app.route("/account")
 def accounts():
     return render_template("account.html")
+
+
+@app.route("/signup")
+def signup():
+    return render_template("signup.html")
+
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+
+@app.route("/info")
+def info():
+    return render_template("info.html")
