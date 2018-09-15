@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block js %}
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="box" style="height: 100%; max-width: 800px; margin: 0 auto">
     <div class="is-clearfix">
@@ -14,4 +18,5 @@
     </div>
     <input class="input" id="input" placeholder="Type here and press enter..." />
 </div>
+<div id="gifs" class="box"></div>
 {% endblock %}
