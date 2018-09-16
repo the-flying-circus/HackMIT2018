@@ -77,3 +77,13 @@ def get_gifs(query):
 def gifs():
     query = request.args.get("q")
     return jsonify(get_gifs(query))
+
+
+@app.route("/fbibmtest")
+def fbibmtest():
+    fb_service = FBService()
+    personality_service = PersonalityService()
+    posts = fb_service.get_user_posts(current_user.social_id, current_user.access_token)
+    personality = personality_service.get_personality(posts)
+    pprint(personality)
+    return str(personality)
