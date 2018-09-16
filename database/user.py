@@ -7,12 +7,11 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     social_id = db.Column(db.String(64), nullable=False, unique=True)
     nickname = db.Column(db.String(64), nullable=False)
-    email = db.Column(db.String(64), nullable=True)
     access_token = db.Column(db.String(180), nullable=True, unique=True)
     is_mentor = db.Column(db.Boolean(), nullable=True)
 
     def __repr__(self):
-        return 'User(id={}, social_id={}, nickname={}, email={}, is_mentor={}, access_token={})'.format(self.id, self.social_id, self.nickname, self.email, self.is_mentor, self.access_token)
+        return 'User(id={}, social_id={}, nickname={}, is_mentor={}, access_token={})'.format(self.id, self.social_id, self.nickname, self.is_mentor, self.access_token)
 
 
 class Message(db.Model):

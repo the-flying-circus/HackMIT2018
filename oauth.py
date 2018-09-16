@@ -67,15 +67,8 @@ class FacebookSignIn(OAuthSignIn):
             decoder=decode_json
         )
 
-        me = oauth_session.get('me?fields=id,email').json()
-        email = me.get('email')
-        if email is None:
-            email = me['id'] + "@no-email.facebook.com"
+        me = oauth_session.get('me?fields=id').json()
         return (
             me['id'],
-            email.split('@')[0],  # Facebook does not provide
-            # username, so the email's user
-            # is used instead
-            email,
             oauth_session.access_token
         )
