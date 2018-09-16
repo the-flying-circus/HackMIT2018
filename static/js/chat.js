@@ -1,5 +1,20 @@
 $(document).ready(function() {
+    var currentRecipient = null;
     var socket = io();
+
+    $.get("/chat/conversations", function(data) {
+        if (data.data.length > 0) {
+            currentRecipient = data.data[0];
+
+            $("#partner").text(currentRecipient);
+
+            $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
+                data.data.forEach(function(item) {
+                    showMessage("msg" + (item.sender == data.id ? " " : " other"), item.message);
+                });
+            });
+        }
+    });
 
     function showMessage(cls, msg) {
         if (/^https?:\/\/media\d+.giphy.com\/media\/[a-zA-Z0-9]+\/giphy-preview.gif$/.test(msg)) {
@@ -11,17 +26,19 @@ $(document).ready(function() {
     }
 
     socket.on("message", function(data) {
-        showMessage("msg other", data);
+        showMessage("msg other", data.contents);
     });
 
     function sendMessage(msg) {
-        showMessage("msg", msg);
-        socket.emit("message", msg);
+        if (currentRecipient) {
+            showMessage("msg", msg);
+            socket.emit("message", msg, currentRecipient);
+        }
     }
 
     $("#input").keydown(function(e) {
         var val = $(this).val();
-        if (e.which == 13 && val) {
+        if (e.which == 13 && val && currentRecipient) {
             e.preventDefault();
             sendMessage(val);
             $(this).val("");

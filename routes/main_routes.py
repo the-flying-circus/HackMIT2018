@@ -1,12 +1,15 @@
 import requests
 import functools
+from pprint import pprint
 
 from app import app
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, redirect
 from database import User
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from services.secrets import GIPHY_KEY
+from services.fb_data import FBService
+from services.ibm_personality import PersonalityService
 
 
 @app.route("/")
@@ -15,16 +18,19 @@ def index():
 
 
 @app.route("/chat")
+@login_required
 def chat():
     return render_template("chat.html")
 
 
 @app.route("/resources")
+@login_required
 def resources():
     return render_template("resources.html")
 
 
 @app.route("/account")
+@login_required
 def accounts():
     return render_template("account.html")
 
@@ -41,13 +47,32 @@ def signup():
 
 @app.route("/login")
 def login():
-    return render_template("login.html")
+    if current_user.is_anonymous:
+        return render_template("login.html")
+    return redirect("/chat")
 
 
 @app.route("/dbtest")
 def dbtest():
     print('current user: ', current_user.social_id, current_user.access_token)
     return current_user.access_token
+
+
+@app.route("/fbauthtest")
+def fbtest():
+    fb_service = FBService()
+    posts = fb_service.get_user_posts(current_user.social_id, current_user.access_token)
+    return str(posts)
+
+
+@app.route("/fbibmtest")
+def fbibmtest():
+    fb_service = FBService()
+    personality_service = PersonalityService()
+    posts = fb_service.get_user_posts(current_user.social_id, current_user.access_token)
+    personality = personality_service.get_personality(posts)
+    pprint(personality)
+    return str(personality)
 
 
 @functools.lru_cache(maxsize=16)

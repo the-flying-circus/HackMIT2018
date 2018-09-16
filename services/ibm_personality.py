@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
-
 import requests
 from pprint import pprint
 from typing import Tuple
 import math
 
-import secrets
+from . import secrets
 
 
 # IBM Personality Insights API root
@@ -17,42 +15,33 @@ class PersonalityService:
         self.sess = requests.Session()
         self.sess.auth = (secrets.IBM_USER, secrets.IBM_PW)
         self.sess.headers = {
-            "content-type": "text/plain",
             "accept": "application/json"
         }
         self.sess.params = {
             "version": "2017-10-13"
         }
 
-    def get_insights(self, text: str) -> dict:
-        response = self.sess.post(IBM_PI_ROOT, data=text)
-        return response.json()
-
-    @staticmethod
-    def get_compatibility_score(insights_1: dict, insights_2: dict) -> float:
-        """Lower score => more compatible."""
-        sse, num_insights = PersonalityService._get_compatibility_recurse(insights_1, insights_2)
-        return math.sqrt(sse / num_insights)
-
-    @staticmethod
-    def _get_compatibility_recurse(insights_1: dict, insights_2: dict) -> Tuple[float, int]:
-        if type(insights_2) is dict:
-            if "percentile" in insights_1:
-                return (insights_1["percentile"] - insights_2["percentile"]) ** 2, 1
-            results = [PersonalityService._get_compatibility_recurse(insights_1[key], insights_2[key]) for key in insights_1.keys()]
-        elif type(insights_1) is list:
-            results = [PersonalityService._get_compatibility_recurse(insights_1[i], insights_2[i]) for i in range(len(insights_1))]
+    def get_personality(self, data) -> dict:
+        if type(data) is str:
+            self.sess.headers["content-type"] = "text/plain"
+            response = self.sess.post(IBM_PI_ROOT, data=data)
         else:
-            return 0, 0
-        sse = sum(result[0] for result in results)
-        num_insights = sum(result[1] for result in results)
-        return sse, num_insights
+            self.sess.headers["content-type"] = "application/json"
+            response = self.sess.post(IBM_PI_ROOT, json=data)
+        insights = response.json()
+        return {trait["name"].lower().replace(' ', '_'): trait["percentile"] for trait in insights["personality"]}
+
+    @staticmethod
+    def get_compatibility_score(personality_1: dict, personality_2: dict) -> float:
+        """Lower score => more compatible."""
+        sse = sum((personality_1[trait] - personality_2[trait]) ** 2 for trait in personality_1)
+        return math.sqrt(sse / len(personality_1))
 
 
 if __name__ == "__main__":
     service = PersonalityService()
-    results_sad = service.get_insights("I am sad. " * 1000)
-    results_happy = service.get_insights("I am happy. " * 1000)
+    results_sad = service.get_personality("I am sad. " * 1000)
+    results_happy = service.get_personality("I am happy. " * 1000)
     pprint(results_sad)
     print("Compatibility scores (lower => more compatible):")
     print("  sad + sad   :", PersonalityService.get_compatibility_score(results_sad, results_sad))
