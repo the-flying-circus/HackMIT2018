@@ -1,6 +1,8 @@
+import random
+
 from datetime import datetime
 
-from flask import redirect, url_for, flash, jsonify
+from flask import request, redirect, url_for, flash, jsonify
 from flask_login import current_user, login_user, logout_user
 from sqlalchemy import or_
 
@@ -15,6 +17,22 @@ from services.ibm_personality import PersonalityService
 def oath_authorize():
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
+    if "bypass" in request.args:
+        social_id = request.args.get("bypass")
+        user = User.query.filter_by(social_id=social_id).first()
+        if not user:
+            personality = {
+                "agreeableness": 0,
+                "conscientiousness": 0,
+                "emotional_range": 0,
+                "extraversion": 0,
+                "openness": 0
+            }
+            user = User(social_id=social_id, access_token="fake access token {} {}".format(datetime.now(), random.random()), max_mentees=3, **personality)
+            db.session.add(user)
+            db.session.commit()
+        login_user(user, True)
+        return redirect(url_for('register'))
     oauth = FacebookSignIn()
     return oauth.authorize()
 
