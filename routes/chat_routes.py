@@ -43,7 +43,7 @@ def getMessages():
     if convo is None:
         return jsonify({"error": "Conversation not found!"})
 
-    messages = Message.query.filter_by(or_(and_(owner=other, recipient=usr), and_(owner=usr, recipient=other))).all()
+    messages = Message.query.filter_by(or_(and_(Message.owner == other, Message.recipient == usr), and_(Message.owner == usr, Message.recipient == other))).all()
     messages = map(lambda item: item.toDict(), messages)
     return jsonify(messages)
 
