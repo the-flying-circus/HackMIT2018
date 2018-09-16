@@ -9,6 +9,7 @@ import secrets
 # FB user Graph API endpoint
 FB_USER_ROOT = "https://graph.facebook.com/v3.1/"
 
+
 class FBService:
     def __init__(self):
         self.sess = requests.Session()

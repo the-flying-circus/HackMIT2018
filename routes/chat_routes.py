@@ -26,7 +26,7 @@ def send_message(message, recipient):
     db.session.commit()
 
 
-@app.route('/chat/history')
+@app.route('/chat/history/<int:other>')
 def getMessages(other):
     usr = current_user.social_id
     if usr.is_mentor:
@@ -34,8 +34,7 @@ def getMessages(other):
     else:
         convo = Conversation.query().filter_by(mentee=other, mentor=usr).first()
     if convo is None:
-        print('conversation not found')
-        return
+        return jsonify({"error": "Conversation not found!"})
 
     messages = Message.query().filter_by(or_(and_(owner=other, recipient=usr), and_(owner=usr, recipient=other))).all()
     messages = map(lambda item: item.toDict(), messages)
