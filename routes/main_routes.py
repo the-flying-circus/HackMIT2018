@@ -4,7 +4,7 @@ import functools
 from app import app
 from flask import render_template, request, jsonify
 from database import User
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from services.secrets import GIPHY_KEY
 from services.fb_data import FBService
@@ -16,16 +16,19 @@ def index():
 
 
 @app.route("/chat")
+@login_required
 def chat():
     return render_template("chat.html")
 
 
 @app.route("/resources")
+@login_required
 def resources():
     return render_template("resources.html")
 
 
 @app.route("/account")
+@login_required
 def accounts():
     return render_template("account.html")
 
