@@ -36,7 +36,7 @@ class PersonalityService:
 
     @staticmethod
     def _get_compatibility_recurse(insights_1: dict, insights_2: dict) -> Tuple[float, int]:
-        if type(insights_2) is dict:
+        if type(insights_1) is dict and type(insights_2) is dict:
             if "percentile" in insights_1:
                 return (insights_1["percentile"] - insights_2["percentile"]) ** 2, 1
             results = [PersonalityService._get_compatibility_recurse(insights_1[key], insights_2[key]) for key in insights_1.keys()]
