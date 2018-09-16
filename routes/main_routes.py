@@ -3,6 +3,7 @@ import functools
 
 from app import app
 from flask import render_template, request, jsonify
+from database import User
 
 from services.secrets import GIPHY_KEY
 
@@ -36,9 +37,15 @@ def info():
 def signup():
     return render_template("signup.html")
 
+
 @app.route("/login")
 def login():
     return render_template("login.html")
+
+
+@app.route("/dbtest")
+def dbtest():
+    return User.query.filter_by(social_id=1234).first()
 
 
 @functools.lru_cache(maxsize=16)
