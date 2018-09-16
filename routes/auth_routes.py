@@ -22,11 +22,11 @@ def oath_authorize():
         user = User.query.filter_by(social_id=social_id).first()
         if not user:
             personality = {
-                "agreeableness": 0,
-                "conscientiousness": 0,
-                "emotional_range": 0,
-                "extraversion": 0,
-                "openness": 0
+                "agreeableness": random.random(),
+                "conscientiousness": random.random(),
+                "emotional_range": random.random(),
+                "extraversion": random.random(),
+                "openness": random.random()
             }
             user = User(social_id=social_id, access_token="fake access token {} {}".format(datetime.now(), random.random()), max_mentees=3, **personality)
             db.session.add(user)
