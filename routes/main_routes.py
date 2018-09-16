@@ -51,6 +51,8 @@ def login():
 def register():
     if current_user.is_anonymous:
         return redirect("/login")
+    elif current_user.nickname is not None and current_user.is_mentor is not None:
+        return redirect("/chat")
     elif request.method == "POST":
         current_user.nickname = request.form["displayname"]
         current_user.is_mentor = request.form["role"] == "mentor"

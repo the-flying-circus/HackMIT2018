@@ -1,9 +1,9 @@
 from flask import redirect, url_for, flash, jsonify
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user
 
 from app import app, db
-from oauth import FacebookSignIn
 from database import User, Conversation
+from oauth import FacebookSignIn
 from services.fb_data import FBService
 from services.ibm_personality import PersonalityService
 
@@ -52,12 +52,12 @@ def pair_mentor():
         return jsonify({"error": "Only mentees can request pairing."})
 
     current_traits = {
-                    "agreeableness": current_user.agreeableness,
-                    "conscientiousness": current_user.conscientiousness,
-                    "emotional_range": current_user.emotional_range,
-                    "extraversion": current_user.extraversion,
-                    "openness": current_user.openness
-                }
+        "agreeableness": current_user.agreeableness,
+        "conscientiousness": current_user.conscientiousness,
+        "emotional_range": current_user.emotional_range,
+        "extraversion": current_user.extraversion,
+        "openness": current_user.openness
+    }
 
     bestMentor = None
     bestScore = 9999999999
@@ -81,5 +81,21 @@ def pair_mentor():
     convo = Conversation(mentee=current_user.social_id, mentor=bestMentor.social_id)
     db.session.add(convo)
     db.session.commit()
-
     return jsonify({"success": True})
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    logout_user()
+    return redirect("/")
+
+
+@app.route('/destroy', methods=['POST'])
+def destroy():
+    cons = Conversation.findWith(current_user.social_id)
+    for con in cons:
+        con.delete()
+    User.query.filter_by(social_id=current_user.social_id).delete()
+    logout_user()
+    db.session.commit()
+    return redirect("/")
