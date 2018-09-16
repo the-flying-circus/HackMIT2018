@@ -65,6 +65,10 @@ $(document).ready(function() {
         }
     });
 
+    socket.on("reload", function(data) {
+        window.location.reload(true);
+    });
+
     function sendMessage(msg) {
         if (currentRecipient !== null) {
             showMessage("msg", msg);

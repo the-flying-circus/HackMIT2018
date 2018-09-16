@@ -1,8 +1,10 @@
+from datetime import datetime
+
 from flask import redirect, url_for, flash, jsonify
 from flask_login import current_user, login_user, logout_user
 from sqlalchemy import or_
 
-from app import app, db
+from app import app, db, sio
 from database import User, Conversation
 from oauth import FacebookSignIn
 from services.fb_data import FBService
@@ -72,7 +74,7 @@ def pair_mentor():
             if con.mentee == current_user.social_id:  # they're already paired
                 break
         else:
-            invalid = True
+            invalid = False
         # stupid way to invert for loop else
         if invalid:
             continue
@@ -95,6 +97,9 @@ def pair_mentor():
     convo = Conversation(mentee=current_user.social_id, mentor=bestMentor.social_id)
     db.session.add(convo)
     db.session.commit()
+
+    sio.emit('reload', room=bestMentor.social_id)
+
     return jsonify({"success": True})
 
 
@@ -106,7 +111,7 @@ def logout():
 
 @app.route('/destroy', methods=['POST'])
 def destroy():
-    Conversation.query.filter(or_(Conversation.mentor == current_user.social_id, Conversation.mentee == current_user.social_id))
+    Conversation.query.filter(or_(Conversation.mentor == current_user.social_id, Conversation.mentee == current_user.social_id)).delete()
     User.query.filter_by(social_id=current_user.social_id).delete()
     logout_user()
     db.session.commit()
