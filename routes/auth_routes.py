@@ -1,5 +1,5 @@
 from flask import redirect, url_for, flash
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user
 
 from app import app, db
 from oauth import FacebookSignIn
@@ -80,4 +80,19 @@ def pair_mentor():
 
     convo = Conversation(mentee=current_user.social_id, mentor=bestMentor.social_id)
     db.session.add(convo)
+    db.session.commit()
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+
+
+@app.route('/destroy')
+def destroy():
+    cons = Conversation.findWith(current_user.social_id)
+    for con in cons:
+        con.delete()
+    current_user.delete()
+    logout_user()
     db.session.commit()
