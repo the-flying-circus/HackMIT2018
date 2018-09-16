@@ -4,7 +4,7 @@ import eventlet
 
 from flask import Flask, render_template, request, jsonify
 from app import app, sio, db
-from routes import sio_test_routes, main_routes, auth_routes
+from routes import sio_test_routes, main_routes, auth_routes, chat_routes
 
 
 @app.before_first_request

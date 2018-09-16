@@ -31,3 +31,10 @@ def oauth_callback():
         db.session.commit()
     login_user(user, True)
     return redirect(url_for('index'))
+
+
+@app.route('/whoami')
+def whoami():
+    if current_user.is_anonymous:
+        return "You are not logged in"
+    return repr(current_user)
