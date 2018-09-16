@@ -9,6 +9,9 @@ $(document).ready(function() {
 
         $("#output .msg").remove();
         $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
+            if (data.error) {
+                return;
+            }
             data.data.forEach(function(item) {
                 showMessage("msg" + (item.sender == data.id ? " " : " other"), item.message);
             });
@@ -27,7 +30,10 @@ $(document).ready(function() {
     });
 
     $("#peers").on("click", ".peer", function(e) {
-        showConversation($(this).text());
+        showConversation({
+            "social_id": $(this).attr("data-id"),
+            "display": $(this).text()
+        });
         e.preventDefault();
     });
 
@@ -58,7 +64,7 @@ $(document).ready(function() {
     });
 
     function sendMessage(msg) {
-        if (currentRecipient) {
+        if (currentRecipient !== null) {
             showMessage("msg", msg);
             socket.emit("message", msg, currentRecipient);
         }
@@ -66,7 +72,7 @@ $(document).ready(function() {
 
     $("#input").keydown(function(e) {
         var val = $(this).val();
-        if (e.which == 13 && val && currentRecipient) {
+        if (e.which == 13 && val && currentRecipient !== null) {
             e.preventDefault();
             sendMessage(val);
             $(this).val("");

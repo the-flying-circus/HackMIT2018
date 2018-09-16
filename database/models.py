@@ -11,7 +11,7 @@ class User(UserMixin, db.Model):
     nickname = db.Column(db.String(64), nullable=True)
     access_token = db.Column(db.String(180), nullable=True, unique=True)
     is_mentor = db.Column(db.Boolean(), nullable=True)
-    max_mentees = db.Column(db.Integer(), nullable=True)
+    max_mentees = db.Column(db.Integer(), nullable=False, default=3)
 
     agreeableness = db.Column(db.Float(), nullable=False)
     conscientiousness = db.Column(db.Float(), nullable=False)

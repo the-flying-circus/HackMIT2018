@@ -58,3 +58,6 @@ nav.level:not(:last-child) {
     margin-bottom: 0;
 }
 
+#peers .peer {
+    margin-bottom: 15px;
+}
