@@ -1,9 +1,9 @@
-from flask import redirect, url_for, flash
+from flask import redirect, url_for, flash, jsonify
 from flask_login import current_user, login_user
 
 from app import app, db
 from oauth import FacebookSignIn
-from database import User
+from database import User, Conversation
 from services.fb_data import FBService
 from services.ibm_personality import PersonalityService
 
@@ -44,3 +44,42 @@ def whoami():
     if current_user.is_anonymous:
         return "You are not logged in"
     return repr(current_user)
+
+
+@app.route('/pair_mentor', methods=["POST"])
+def pair_mentor():
+    if current_user.is_mentor:
+        return jsonify({"error": "Only mentees can request pairing."})
+
+    current_traits = {
+                    "agreeableness": current_user.agreeableness,
+                    "conscientiousness": current_user.conscientiousness,
+                    "emotional_range": current_user.emotional_range,
+                    "extraversion": current_user.extraversion,
+                    "openness": current_user.openness
+                }
+
+    bestMentor = None
+    bestScore = 9999999999
+
+    for user in User.query.filter_by(is_mentor=True).all():
+        if len(Conversation.findWith(user)) >= user.max_mentees:
+            continue
+
+        these_traits = {
+            "agreeableness": user.agreeableness,
+            "conscientiousness": user.conscientiousness,
+            "emotional_range": user.emotional_range,
+            "extraversion": user.extraversion,
+            "openness": user.openness
+        }
+        score = PersonalityService.get_compatibility_score(current_traits, these_traits)
+        if score < bestScore:
+            bestMentor = user
+            bestScore = score
+
+    convo = Conversation(mentee=current_user.social_id, mentor=bestMentor.social_id)
+    db.session.add(convo)
+    db.session.commit()
+
+    return jsonify({"success": True})

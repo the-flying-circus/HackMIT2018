@@ -67,23 +67,17 @@ def getMessages():
     return jsonify({"data": messages, "id": usr})
 
 
-@app.route('/register_conversation', methods=['POST'])
-def registerConversation():
-    data = request.get_json(force=True)
-    other = data['other']
-    usr = current_user.social_id
-    if current_user.is_mentor:
-        convo = Conversation(mentor=usr, mentee=other)
-    else:
-        convo = Conversation(mentor=other, mentee=usr)
-
-    db.session.add(convo)
-    db.session.commit()
-
-    return 'True'
-
-
-@app.route('/get_mentor', methods=['POST'])
-def createMatch():
-    data = request.get_json(force=True)
-
+# @app.route('/register_conversation', methods=['POST'])
+# def registerConversation():
+#     data = request.get_json(force=True)
+#     other = data['other']
+#     usr = current_user.social_id
+#     if current_user.is_mentor:
+#         convo = Conversation(mentor=usr, mentee=other)
+#     else:
+#         convo = Conversation(mentor=other, mentee=usr)
+#
+#     db.session.add(convo)
+#     db.session.commit()
+#
+#     return 'True'
