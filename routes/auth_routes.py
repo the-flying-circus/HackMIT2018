@@ -63,7 +63,7 @@ def pair_mentor():
     bestScore = 9999999999
 
     for user in User.query.filter_by(is_mentor=True).all():
-        if len(Conversation.findWith(user)) >= user.max_mentees:
+        if len(Conversation.findWith(user.social_id)) >= user.max_mentees:
             continue
 
         these_traits = {
