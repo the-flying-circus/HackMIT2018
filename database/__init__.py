@@ -1,2 +1,2 @@
-from database.models import User, Message, Conversation
+from database.models import *
 from app import db, app
