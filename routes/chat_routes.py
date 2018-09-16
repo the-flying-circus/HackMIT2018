@@ -18,7 +18,7 @@ def send_message(message, recipient):
         print('conversation not found')
         return
     timestamp = datetime.now()
-    other_nick = User.query().filter_by(social_id=recipient).first
+    other_nick = User.query().filter_by(social_id=recipient).first()
     other_nick = other_nick.nickname
     print('message sent by {} to {} at {}: {}'.format(current_user.nickname, other_nick, timestamp, message))
     message = Message(sent=timestamp, owner=usr, recipient=recipient, contents=message)
