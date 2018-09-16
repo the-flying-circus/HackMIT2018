@@ -41,3 +41,7 @@
     pointer-events: initial;
     cursor: pointer;
 }
+
+nav.level {
+    font-size: 1.4em;
+}
