@@ -78,6 +78,9 @@ def pair_mentor():
             bestMentor = user
             bestScore = score
 
+    if bestMentor is None:
+        return jsonify({"error": "There are no mentors currently available."})
+
     convo = Conversation(mentee=current_user.social_id, mentor=bestMentor.social_id)
     db.session.add(convo)
     db.session.commit()
