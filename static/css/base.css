@@ -54,10 +54,10 @@ nav.level:not(:last-child) {
     margin-bottom: 0;
 }
 
-.bg-img { 
-    background: url(../smoky_mountains.jpeg) no-repeat center center fixed; 
+.content {
+    background: url(../smoky_mountains.jpg) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover; 
     -o-background-size: cover;
     background-size: cover;
- }
+}
