@@ -3,7 +3,7 @@ import functools
 from pprint import pprint
 
 from app import app
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, redirect
 from database import User
 from flask_login import current_user, login_required
 
@@ -47,7 +47,9 @@ def signup():
 
 @app.route("/login")
 def login():
-    return render_template("login.html")
+    if current_user.is_anonymous:
+        return render_template("login.html")
+    return redirect("/chat")
 
 
 @app.route("/dbtest")
