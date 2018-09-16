@@ -18,7 +18,7 @@ def send_message(message, recipient):
         print('conversation not found')
         return
     timestamp = datetime.now()
-    other_nick = User.query().filter_by(social_id=recipient).first
+    other_nick = User.query().filter_by(social_id=recipient).first()
     other_nick = other_nick.nickname
     print('message sent by {} to {} at {}: {}'.format(current_user.nickname, other_nick, timestamp, message))
     message = Message(sent=timestamp, owner=usr, recipient=recipient, contents=message)
@@ -35,8 +35,7 @@ def getMessages():
     else:
         convo = Conversation.query().filter_by(mentee=other, mentor=usr).first()
     if convo is None:
-        print('conversation not found')
-        return
+        return jsonify({"error": "Conversation not found!"})
 
     messages = Message.query().filter_by(or_(and_(owner=other, recipient=usr), and_(owner=usr, recipient=other))).all()
     messages = map(lambda item: item.toDict(), messages)

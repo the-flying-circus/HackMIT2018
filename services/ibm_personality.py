@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
-
 import requests
 from pprint import pprint
 from typing import Tuple
 import math
 
-import secrets
+from . import secrets
 
 
 # IBM Personality Insights API root
@@ -17,15 +15,19 @@ class PersonalityService:
         self.sess = requests.Session()
         self.sess.auth = (secrets.IBM_USER, secrets.IBM_PW)
         self.sess.headers = {
-            "content-type": "text/plain",
             "accept": "application/json"
         }
         self.sess.params = {
             "version": "2017-10-13"
         }
 
-    def get_insights(self, text: str) -> dict:
-        response = self.sess.post(IBM_PI_ROOT, data=text)
+    def get_insights(self, data) -> dict:
+        if type(data) is str:
+            self.sess.headers["content-type"] = "text/plain"
+            response = self.sess.post(IBM_PI_ROOT, data=data)
+        else:
+            self.sess.headers["content-type"] = "application/json"
+            response = self.sess.post(IBM_PI_ROOT, json=data)
         return response.json()
 
     @staticmethod
@@ -36,7 +38,7 @@ class PersonalityService:
 
     @staticmethod
     def _get_compatibility_recurse(insights_1: dict, insights_2: dict) -> Tuple[float, int]:
-        if type(insights_2) is dict:
+        if type(insights_1) is dict and type(insights_2) is dict:
             if "percentile" in insights_1:
                 return (insights_1["percentile"] - insights_2["percentile"]) ** 2, 1
             results = [PersonalityService._get_compatibility_recurse(insights_1[key], insights_2[key]) for key in insights_1.keys()]
