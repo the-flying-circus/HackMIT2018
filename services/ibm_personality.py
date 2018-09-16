@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
-
 import requests
 from pprint import pprint
 from typing import Tuple
 import math
 
-import secrets
+from . import secrets
 
 
 # IBM Personality Insights API root
@@ -17,15 +15,19 @@ class PersonalityService:
         self.sess = requests.Session()
         self.sess.auth = (secrets.IBM_USER, secrets.IBM_PW)
         self.sess.headers = {
-            "content-type": "text/plain",
             "accept": "application/json"
         }
         self.sess.params = {
             "version": "2017-10-13"
         }
 
-    def get_insights(self, text: str) -> dict:
-        response = self.sess.post(IBM_PI_ROOT, data=text)
+    def get_insights(self, data) -> dict:
+        if type(data) is str:
+            self.sess.headers["content-type"] = "text/plain"
+            response = self.sess.post(IBM_PI_ROOT, data=data)
+        else:
+            self.sess.headers["content-type"] = "application/json"
+            response = self.sess.post(IBM_PI_ROOT, json=data)
         return response.json()
 
     @staticmethod
