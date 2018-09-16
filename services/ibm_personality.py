@@ -21,40 +21,27 @@ class PersonalityService:
             "version": "2017-10-13"
         }
 
-    def get_insights(self, data) -> dict:
+    def get_personality(self, data) -> dict:
         if type(data) is str:
             self.sess.headers["content-type"] = "text/plain"
             response = self.sess.post(IBM_PI_ROOT, data=data)
         else:
             self.sess.headers["content-type"] = "application/json"
             response = self.sess.post(IBM_PI_ROOT, json=data)
-        return response.json()
+        insights = response.json()
+        return {trait["name"]: trait["percentile"] for trait in insights["personality"]}
 
     @staticmethod
-    def get_compatibility_score(insights_1: dict, insights_2: dict) -> float:
+    def get_compatibility_score(personality_1: dict, personality_2: dict) -> float:
         """Lower score => more compatible."""
-        sse, num_insights = PersonalityService._get_compatibility_recurse(insights_1, insights_2)
-        return math.sqrt(sse / num_insights)
-
-    @staticmethod
-    def _get_compatibility_recurse(insights_1: dict, insights_2: dict) -> Tuple[float, int]:
-        if type(insights_1) is dict and type(insights_2) is dict:
-            if "percentile" in insights_1:
-                return (insights_1["percentile"] - insights_2["percentile"]) ** 2, 1
-            results = [PersonalityService._get_compatibility_recurse(insights_1[key], insights_2[key]) for key in insights_1.keys()]
-        elif type(insights_1) is list:
-            results = [PersonalityService._get_compatibility_recurse(insights_1[i], insights_2[i]) for i in range(len(insights_1))]
-        else:
-            return 0, 0
-        sse = sum(result[0] for result in results)
-        num_insights = sum(result[1] for result in results)
-        return sse, num_insights
+        sse = sum((personality_1[trait] - personality_2[trait]) ** 2 for trait in personality_1)
+        return math.sqrt(sse / len(personality_1))
 
 
 if __name__ == "__main__":
     service = PersonalityService()
-    results_sad = service.get_insights("I am sad. " * 1000)
-    results_happy = service.get_insights("I am happy. " * 1000)
+    results_sad = service.get_personality("I am sad. " * 1000)
+    results_happy = service.get_personality("I am happy. " * 1000)
     pprint(results_sad)
     print("Compatibility scores (lower => more compatible):")
     print("  sad + sad   :", PersonalityService.get_compatibility_score(results_sad, results_sad))

@@ -70,9 +70,9 @@ def fbibmtest():
     fb_service = FBService()
     personality_service = PersonalityService()
     posts = fb_service.get_user_posts(current_user)
-    insights = personality_service.get_insights(posts)
-    pprint(insights)
-    return str(insights)
+    personality = personality_service.get_personality(posts)
+    pprint(personality)
+    return str(personality)
 
 
 @functools.lru_cache(maxsize=16)
