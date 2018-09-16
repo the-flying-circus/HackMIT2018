@@ -63,7 +63,17 @@ def pair_mentor():
     bestScore = 9999999999
 
     for user in User.query.filter_by(is_mentor=True).all():
-        if len(Conversation.findWith(user.social_id)) >= user.max_mentees:
+        involved_cons = Conversation.findWith(user.social_id)
+        if len(involved_cons) >= user.max_mentees:
+            continue
+        invalid = True
+        for con in involved_cons:
+            if con.mentee == current_user.social_id:  # they're already paired
+                break
+        else:
+            invalid = True
+        # stupid way to invert for loop else
+        if invalid:
             continue
 
         these_traits = {
@@ -95,9 +105,7 @@ def logout():
 
 @app.route('/destroy', methods=['POST'])
 def destroy():
-    cons = Conversation.findWith(current_user.social_id)
-    for con in cons:
-        con.delete()
+    Conversation.query.filter(or_(Conversation.mentor == current_user.social_id, Conversation.mentee == current_user.social_id))
     User.query.filter_by(social_id=current_user.social_id).delete()
     logout_user()
     db.session.commit()
