@@ -1,5 +1,25 @@
 {% extends "base.html" %}
 
+{% block css %}
+<style>
+.radio-box > input {
+    visibility: hidden;
+    position: absolute;
+}
+
+.radio-box > input + div {
+    cursor: pointer;
+    height: 100%;
+    border: 4px solid transparent;
+}
+
+.radio-box > input:checked + div {
+    border: 4px solid #555555;
+    box-shadow: 0 3px 5px #cccccc;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div style="text-align:center;margin-top:20vh;">
     <div style="max-width:30em;margin-left:auto;margin-right:auto;">
@@ -8,16 +28,26 @@
             <div class="field">
                 <input class="input is-primary" type="text" name="displayname" placeholder="Display Name" required>
             </div>
+            <br>
             <div class="field">
-                <label class="radio">
-                    <input type="radio" name="role" value="mentee" required>
-                    Mentee
-                </label>
-                <label class="radio">
-                    <input type="radio" name="role" value="mentor" required>
-                    Mentor
-                </label>
+                <div class="columns is-desktop">
+                    <label class="radio radio-box column is-half">
+                        <input type="radio" name="role" value="mentee" required>
+                        <div class="has-background-primary box">
+                            <h1 class="title">Become a <strong>Mentee</strong>!</h1>
+                            <p>Request support from our incredible volunteers.</p>
+                        </div>
+                    </label>
+                    <label class="radio radio-box column">
+                        <input type="radio" name="role" value="mentor" required>
+                        <div class="has-background-info has-text-white box">
+                            <h1 class="title has-text-white">Become a <strong>Mentor</strong>!</h1>
+                            <p>Use your unique experiences to provide life-changing support to mentees.</p>
+                        </div>
+                    </label>
+                </div>
             </div>
+            <br>
             <div class="field">
                 <button class="button is-link">Submit</button>
             </div>
