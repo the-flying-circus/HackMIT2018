@@ -32,6 +32,13 @@ def send_message(message, recipient):
         sio.emit('message', {'sent': timestamp, 'owner': usr, 'recipient': recipient, 'contents': message})
 
 
+@app.route('/chat/conversations')
+def get_conversations():
+    usr = current_user.social_id
+    convos = Conversation.query.filter(or_(Conversation.mentor == usr, Conversation.mentee == usr)).all()
+    return jsonify({"data": [conv.mentor if conv.mentee == usr else conv.mentee for conv in convos]})
+
+
 @app.route('/chat/history')
 def getMessages():
     other = request.args.get('other')
