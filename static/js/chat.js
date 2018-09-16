@@ -3,6 +3,11 @@ $(document).ready(function() {
     var socket = io();
 
     $.get("/chat/conversations", function(data) {
+        $("#peers").children().remove();
+        data.data.forEach(function(item) {
+            $("#peers").append($("<div class='peer' />").text(item));
+        });
+
         if (data.data.length > 0) {
             currentRecipient = data.data[0];
 
