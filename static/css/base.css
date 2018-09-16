@@ -2,6 +2,10 @@
     font-family: 'Raleway', sans-serif;
 }
 
+html {
+    overflow-y: auto;
+}
+
 #output .msg {
     display: inline-block;
     float: right;
