@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import jsonify
+from flask import jsonify, request
 
 from app import sio, db, app
 from flask_login import current_user
@@ -10,7 +10,7 @@ from sqlalchemy import or_, and_
 @sio.on('send_message', '/chat')
 def send_message(message, recipient):
     usr = current_user.social_id
-    if usr.is_mentor:
+    if current_user.is_mentor:
         convo = Conversation.query().filter_by(mentor=usr, mentee=recipient).first()
     else:
         convo = Conversation.query().filter_by(mentee=recipient, mentor=usr).first()
@@ -26,10 +26,11 @@ def send_message(message, recipient):
     db.session.commit()
 
 
-@app.route('/chat/history/<int:other>')
-def getMessages(other):
+@app.route('/chat/history')
+def getMessages():
+    other = request.args.get('other')
     usr = current_user.social_id
-    if usr.is_mentor:
+    if current_user.is_mentor:
         convo = Conversation.query().filter_by(mentor=usr, mentee=other).first()
     else:
         convo = Conversation.query().filter_by(mentee=other, mentor=usr).first()
@@ -39,3 +40,19 @@ def getMessages(other):
     messages = Message.query().filter_by(or_(and_(owner=other, recipient=usr), and_(owner=usr, recipient=other))).all()
     messages = map(lambda item: item.toDict(), messages)
     return jsonify(messages)
+
+
+@app.route('/register_conversation', methods='POST')
+def registerConversation():
+    data = request.get_json(force=True)
+    other = data['other']
+    usr = current_user.social_id
+    if current_user.is_mentor:
+        convo = Conversation(mentor=usr, mentee=other)
+    else:
+        convo = Conversation(mentor=other, mentee=usr)
+
+    db.session.add(convo)
+    db.session.commit()
+
+    return 'True'
