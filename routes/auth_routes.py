@@ -8,7 +8,7 @@ from Database import User
 
 @app.route('/authorize')
 def oath_authorize():
-    if not current_user.is_anonymous():
+    if not current_user.is_anonymous:
         return redirect(url_for('index'))
     oath = FacebookSignIn()
     return oath.authorize()
@@ -16,7 +16,7 @@ def oath_authorize():
 
 @app.route('/auth-callback')
 def oauth_callback():
-    if not current_user.is_anonymous():
+    if not current_user.is_anonymous:
         return redirect(url_for('index'))
 
     oauth = FacebookSignIn()
