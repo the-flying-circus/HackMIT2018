@@ -5,7 +5,7 @@ from flask_login import current_user, login_user, logout_user
 from sqlalchemy import or_
 
 from app import app, db, sio
-from database import User, Conversation
+from database import User, Conversation, Message
 from oauth import FacebookSignIn
 from services.fb_data import FBService
 from services.ibm_personality import PersonalityService
@@ -42,67 +42,6 @@ def oauth_callback():
     return redirect(url_for('register'))
 
 
-@app.route('/whoami')
-def whoami():
-    if current_user.is_anonymous:
-        return "You are not logged in"
-    return repr(current_user)
-
-
-@app.route('/pair_mentor', methods=["POST"])
-def pair_mentor():
-    if current_user.is_mentor:
-        return jsonify({"error": "Only mentees can request pairing."})
-
-    current_traits = {
-        "agreeableness": current_user.agreeableness,
-        "conscientiousness": current_user.conscientiousness,
-        "emotional_range": current_user.emotional_range,
-        "extraversion": current_user.extraversion,
-        "openness": current_user.openness
-    }
-
-    bestMentor = None
-    bestScore = 9999999999
-
-    for user in User.query.filter_by(is_mentor=True).all():
-        involved_cons = Conversation.findWith(user.social_id)
-        if len(involved_cons) >= user.max_mentees:
-            continue
-        invalid = True
-        for con in involved_cons:
-            if con.mentee == current_user.social_id:  # they're already paired
-                break
-        else:
-            invalid = False
-        # stupid way to invert for loop else
-        if invalid:
-            continue
-
-        these_traits = {
-            "agreeableness": user.agreeableness,
-            "conscientiousness": user.conscientiousness,
-            "emotional_range": user.emotional_range,
-            "extraversion": user.extraversion,
-            "openness": user.openness
-        }
-        score = PersonalityService.get_compatibility_score(current_traits, these_traits)
-        if score < bestScore:
-            bestMentor = user
-            bestScore = score
-
-    if bestMentor is None:
-        return jsonify({"error": "There are no mentors currently available."})
-
-    convo = Conversation(mentee=current_user.social_id, mentor=bestMentor.social_id)
-    db.session.add(convo)
-    db.session.commit()
-
-    sio.emit('reload', room=bestMentor.social_id)
-
-    return jsonify({"success": True})
-
-
 @app.route('/logout', methods=['POST'])
 def logout():
     logout_user()
@@ -112,6 +51,7 @@ def logout():
 @app.route('/destroy', methods=['POST'])
 def destroy():
     Conversation.query.filter(or_(Conversation.mentor == current_user.social_id, Conversation.mentee == current_user.social_id)).delete()
+    Message.query.filter(or_(Message.owner == current_user.social_id, Message.recipient == current_user.social_id)).delete()
     User.query.filter_by(social_id=current_user.social_id).delete()
     logout_user()
     db.session.commit()

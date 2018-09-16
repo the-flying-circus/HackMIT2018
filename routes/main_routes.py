@@ -61,29 +61,6 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/dbtest")
-def dbtest():
-    print('current user: ', current_user.social_id, current_user.access_token)
-    return current_user.access_token
-
-
-@app.route("/fbauthtest")
-def fbtest():
-    fb_service = FBService()
-    posts = fb_service.get_user_posts(current_user.social_id, current_user.access_token)
-    return str(posts)
-
-
-@app.route("/fbibmtest")
-def fbibmtest():
-    fb_service = FBService()
-    personality_service = PersonalityService()
-    posts = fb_service.get_user_posts(current_user.social_id, current_user.access_token)
-    personality = personality_service.get_personality(posts)
-    pprint(personality)
-    return str(personality)
-
-
 @functools.lru_cache(maxsize=16)
 def get_gifs(query):
     if not query:
