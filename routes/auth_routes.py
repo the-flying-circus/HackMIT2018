@@ -95,9 +95,7 @@ def logout():
 
 @app.route('/destroy', methods=['POST'])
 def destroy():
-    cons = Conversation.findWith(current_user.social_id)
-    for con in cons:
-        con.delete()
+    Conversation.query.filter(or_(Conversation.mentor == current_user.social_id, Conversation.mentee == current_user.social_id))
     User.query.filter_by(social_id=current_user.social_id).delete()
     logout_user()
     db.session.commit()
