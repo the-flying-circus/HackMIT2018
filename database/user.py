@@ -24,7 +24,7 @@ class Message(db.Model):
     contents = db.Column(db.Text(), nullable=False)
 
     def __repr__(self):
-        return 'Message(id={}, sent={}, owner={}, recipient={}, contents={}'.format(self.id, self.sent, self.owner, self.recipient, self.contents)
+        return 'Message(id={}, sent={}, owner={}, recipient={}, contents={})'.format(self.id, self.sent, self.owner, self.recipient, self.contents)
 
     def toDict(self):
         return {'timestamp': self.sent, 'sender': self.owner, 'recipient': self.recipient, 'message': self.contents}
@@ -37,7 +37,7 @@ class Conversation(db.Model):
     mentee = db.Column(db.ForeignKey("users.social_id"), nullable=False)
 
     def __repr__(self):
-        return 'Conversation(id={}, mentor={}, mentee={}'.format(self.id, self.mentor, self.mentee)
+        return 'Conversation(id={}, mentor={}, mentee={})'.format(self.id, self.mentor, self.mentee)
 
 
 @lm.user_loader
