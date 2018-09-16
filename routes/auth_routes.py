@@ -12,8 +12,8 @@ from services.ibm_personality import PersonalityService
 def oath_authorize():
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
-    oath = FacebookSignIn()
-    return oath.authorize()
+    oauth = FacebookSignIn()
+    return oauth.authorize()
 
 
 @app.route('/auth-callback')
@@ -36,7 +36,7 @@ def oauth_callback():
         db.session.add(user)
         db.session.commit()
     login_user(user, True)
-    return redirect(url_for('index'))
+    return redirect(url_for('register'))
 
 
 @app.route('/whoami')

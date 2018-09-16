@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align:center;margin-top:20vh;">
+    <p>Thanks for signing in! Would you like to be mentored, or would you like to help mentees
+    in need of support?</p>
+    <form method="post">
+        <div class="field">
+            <label class="radio">
+                <input type="radio" name="role" value="mentee">
+                Mentee
+            </label>
+            <label class="radio">
+                <input type="radio" name="role" value="mentor">
+                Mentor
+            </label>
+        </div>
+        <div class="field">
+            <button class="button is-link">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

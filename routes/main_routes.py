@@ -2,7 +2,7 @@ import requests
 import functools
 from pprint import pprint
 
-from app import app
+from app import app, db
 from flask import render_template, request, jsonify, redirect
 from database import User
 from flask_login import current_user, login_required
@@ -40,16 +40,22 @@ def info():
     return render_template("info.html")
 
 
-@app.route("/signup")
-def signup():
-    return render_template("signup.html")
-
-
 @app.route("/login")
 def login():
     if current_user.is_anonymous:
         return render_template("login.html")
-    return redirect("/chat")
+    return redirect("/register")
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if current_user.is_anonymous:
+        return redirect("/login")
+    elif request.method == "POST":
+        current_user.is_mentor = request.form["role"] == "mentor"
+        db.session.commit()
+        return redirect("/chat")
+    return render_template("register.html")
 
 
 @app.route("/dbtest")
