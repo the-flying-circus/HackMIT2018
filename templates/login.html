@@ -6,8 +6,7 @@
 
 {% block content %}
 <div class="bg-img" style="text-align:center">
-    <br />
-    <p>By logging into Facebook, we can analyze your profile and pair you up with an appropriate mentor or mentee.</p>
-    <a href="/authorize" class="button is-primary is-large"><i class="fa fa-facebook-official" style="margin-right:1em"></i> Login with Facebook</a>
+    <p style="padding-top: 150px"><img src="{{ url_for('static', filename='core_logo_blk.png') }}" alt="Core" style="height: 10px"/> uses your Facebook account for authentication and to best match you with a mentor or mentee.</p>
+    <a href="/authorize" class="button is-info is-large"><i class="fa fa-facebook-official" style="margin-right:1em"></i> Login with Facebook</a>
 </div>
 {% endblock content %}

@@ -23,24 +23,24 @@
 {% block content %}
 <div style="text-align:center;margin-top:20vh;">
     <div style="max-width:30em;margin-left:auto;margin-right:auto;">
-        <p>Thanks for signing in! Complete your registration below.</p>
+        <p>Thanks for signing in! Choose a display name below.</p>
         <form method="post">
             <div class="field">
-                <input class="input is-primary" type="text" name="displayname" placeholder="Display Name" required style="max-width:20em;">
+                <input class="input is-info" type="text" name="displayname" placeholder="Display Name" required style="max-width:20em;">
             </div>
             <br>
             <div class="field">
                 <div class="columns is-desktop">
                     <label class="radio radio-box column is-half-desktop">
                         <input type="radio" name="role" value="mentee" required>
-                        <div class="has-background-primary box">
-                            <h1 class="title">Become a <strong>Mentee</strong>!</h1>
+                        <div class="has-background-info has-text-white box">
+                            <h1 class="title has-text-white">Become a <strong>Mentee</strong>!</h1>
                             <p>Request support from our incredible volunteers.</p>
                         </div>
                     </label>
                     <label class="radio radio-box column">
                         <input type="radio" name="role" value="mentor" required>
-                        <div class="has-background-info has-text-white box">
+                        <div class="has-background-dark has-text-white box">
                             <h1 class="title has-text-white">Become a <strong>Mentor</strong>!</h1>
                             <p>Use your unique experiences to provide life-changing support to mentees.</p>
                         </div>
@@ -49,7 +49,7 @@
             </div>
             <br>
             <div class="field">
-                <button class="button is-link">Submit</button>
+                <button class="button is-link is-outlined">Submit</button>
             </div>
         </form>
     </div>
