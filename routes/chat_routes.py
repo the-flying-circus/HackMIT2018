@@ -7,7 +7,7 @@ from database import Message, Conversation, User
 from sqlalchemy import or_, and_
 
 
-@sio.on('send_message', '/chat')
+@sio.on('message')
 def send_message(message, recipient):
     usr = current_user.social_id
     if current_user.is_mentor:
@@ -19,17 +19,17 @@ def send_message(message, recipient):
         return
     timestamp = datetime.now()
     other_nick = User.query.filter_by(social_id=recipient).first()
-    other_nick = other_nick.nickname
-    print('message sent by {} to {} at {}: {}'.format(current_user.nickname, other_nick, timestamp, message))
+    other_nick = other_nick.social_id
+    print('message sent by {} to {} at {}: {}'.format(current_user.social_id, other_nick, timestamp, message))
     message = Message(sent=timestamp, owner=usr, recipient=recipient, contents=message)
     db.session.add(message)
     db.session.commit()
 
     # find if the other side is online
     other_sid = User.query.filter_by(social_id=recipient).first().id
-    if sio.server.client_manager.is_connected(other_sid, '/chat'):
+    if sio.server.manager.is_connected(other_sid, '/chat'):
         # they are connected!
-        sio.emit('receive', {'sent': timestamp, 'owner': usr, 'recipient': recipient, 'contents': message}, namespace='/chat', room=other_sid)
+        sio.emit('message', {'sent': timestamp, 'owner': usr, 'recipient': recipient, 'contents': message})
 
 
 @app.route('/chat/history')
