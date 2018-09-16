@@ -4,6 +4,12 @@ $(document).ready(function() {
 
     $.get("/chat/conversations", function(data) {
         currentRecipient = data.data[0];
+
+        $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
+            data.data.forEach(function(item) {
+                showMessage("msg" + (item.sender == data.id ? " " : " other"), item.message);
+            });
+        });
     });
 
     function showMessage(cls, msg) {
@@ -16,7 +22,7 @@ $(document).ready(function() {
     }
 
     socket.on("message", function(data) {
-        showMessage("msg other", data);
+        showMessage("msg other", data.contents);
     });
 
     function sendMessage(msg) {

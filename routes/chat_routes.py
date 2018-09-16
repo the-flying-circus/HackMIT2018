@@ -2,9 +2,15 @@ from datetime import datetime
 from flask import jsonify, request
 
 from app import sio, db, app
+from flask_socketio import join_room
 from flask_login import current_user
 from database import Message, Conversation, User
 from sqlalchemy import or_, and_
+
+
+@sio.on('connect')
+def on_connect():
+    join_room(current_user.social_id)
 
 
 @sio.on('message')
@@ -25,11 +31,7 @@ def send_message(message, recipient):
     db.session.add(message)
     db.session.commit()
 
-    # find if the other side is online
-    other_sid = User.query.filter_by(social_id=recipient).first().id
-    if sio.server.manager.is_connected(other_sid, '/chat'):
-        # they are connected!
-        sio.emit('message', {'sent': timestamp, 'owner': usr, 'recipient': recipient, 'contents': message})
+    sio.emit('message', {'sent': str(timestamp), 'owner': usr, 'recipient': recipient, 'contents': message.contents}, room=recipient)
 
 
 @app.route('/chat/conversations')
@@ -55,9 +57,9 @@ def getMessages():
             and_(Message.owner == other, Message.recipient == usr),
             and_(Message.owner == usr, Message.recipient == other)
         )
-    ).all()
+    ).order_by("sent").all()
     messages = list(map(lambda item: item.toDict(), messages))
-    return jsonify(messages)
+    return jsonify({"data": messages, "id": usr})
 
 
 @app.route('/register_conversation', methods=['POST'])
