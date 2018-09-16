@@ -1,4 +1,4 @@
-from Database.User import User
+from database.user import User
 from app import db, app
 
 
