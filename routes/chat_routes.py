@@ -13,7 +13,7 @@ def send_message(message, recipient):
     if current_user.is_mentor:
         convo = Conversation.query.filter_by(mentor=usr, mentee=recipient).first()
     else:
-        convo = Conversation.query.filter_by(mentee=recipient, mentor=usr).first()
+        convo = Conversation.query.filter_by(mentee=usr, mentor=recipient).first()
     if convo is None:
         print('conversation not found')
         return

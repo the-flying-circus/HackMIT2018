@@ -1,5 +1,10 @@
 $(document).ready(function() {
+    var currentRecipient = null;
     var socket = io();
+
+    $.get("/chat/conversations", function(data) {
+        currentRecipient = data.data[0];
+    });
 
     function showMessage(cls, msg) {
         if (/^https?:\/\/media\d+.giphy.com\/media\/[a-zA-Z0-9]+\/giphy-preview.gif$/.test(msg)) {
@@ -16,7 +21,7 @@ $(document).ready(function() {
 
     function sendMessage(msg) {
         showMessage("msg", msg);
-        socket.emit("message", msg);
+        socket.emit("message", msg, currentRecipient);
     }
 
     $("#input").keydown(function(e) {
