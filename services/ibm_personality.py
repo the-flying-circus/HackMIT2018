@@ -26,6 +26,14 @@ class PersonalityService:
             self.sess.headers["content-type"] = "text/plain"
             response = self.sess.post(IBM_PI_ROOT, data=data)
         else:
+            if not data["contentItems"]:
+                return {
+                    "agreeableness": 0,
+                    "conscientiousness": 0,
+                    "emotional_range": 0,
+                    "extraversion": 0,
+                    "openness": 0
+                }
             self.sess.headers["content-type"] = "application/json"
             response = self.sess.post(IBM_PI_ROOT, json=data)
         insights = response.json()
