@@ -2,6 +2,19 @@ $(document).ready(function() {
     var currentRecipient = null;
     var socket = io();
 
+    function showConversation(peer) {
+        currentRecipient = peer;
+
+        $("#partner").text(currentRecipient);
+
+        $("#output .msg").remove();
+        $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
+            data.data.forEach(function(item) {
+                showMessage("msg" + (item.sender == data.id ? " " : " other"), item.message);
+            });
+        });
+    }
+
     $.get("/chat/conversations", function(data) {
         $("#peers").children().remove();
         data.data.forEach(function(item) {
@@ -9,16 +22,13 @@ $(document).ready(function() {
         });
 
         if (data.data.length > 0) {
-            currentRecipient = data.data[0];
-
-            $("#partner").text(currentRecipient);
-
-            $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
-                data.data.forEach(function(item) {
-                    showMessage("msg" + (item.sender == data.id ? " " : " other"), item.message);
-                });
-            });
+            showConversation(data.data[0]);
         }
+    });
+
+    $("#peers").on("click", ".peer", function(e) {
+        showConversation($(this).text());
+        e.preventDefault();
     });
 
     function showMessage(cls, msg) {
