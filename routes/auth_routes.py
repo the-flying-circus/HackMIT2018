@@ -63,8 +63,12 @@ def pair_mentor():
     bestScore = 9999999999
 
     for user in User.query.filter_by(is_mentor=True).all():
-        if len(Conversation.findWith(user.social_id)) >= user.max_mentees:
+        involved_cons = Conversation.findWith(user.social_id)
+        if len(involved_cons) >= user.max_mentees:
             continue
+        for con in involved_cons:
+            if con.mentee == current_user.social_id:  # they're already paired
+                continue
 
         these_traits = {
             "agreeableness": user.agreeableness,
