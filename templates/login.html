@@ -7,6 +7,8 @@
 {% block content %}
 <div class="bg-img" style="text-align:center">
     <p style="padding-top: 150px"><img src="{{ url_for('static', filename='core_logo_blk.png') }}" alt="Core" style="height: 10px"/> uses your Facebook account for authentication and to best match you with a mentor or mentee.</p>
-    <a href="/authorize" class="button is-info is-large"><i class="fa fa-facebook-official" style="margin-right:1em"></i> Login with Facebook</a>
+    <a href="/authorize" class="button is-info is-large"><i class="fa fa-facebook-official" style="margin-right:1em"></i> Login with Facebook</a><br />
+    <a href="/authorize?bypass=1" class="button is-secondary is-large" style="margin-top:15px"><i class="fa fa-user" style="margin-right:1em"></i> Example User 1</a><br />
+    <a href="/authorize?bypass=2" class="button is-secondary is-large" style="margin-top:15px"><i class="fa fa-user" style="margin-right:1em"></i> Example User 2</a>
 </div>
 {% endblock content %}
