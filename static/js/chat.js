@@ -48,8 +48,9 @@ $(document).ready(function() {
             $("#output").append("<div class='is-clearfix'><span class='" + cls + "'><img src='" + msg + "' /></span></div>");
         }
         else {
-            $("#output").append("<div class='is-clearfix'><span class='" + cls + "'>" + $("<div />").text(msg).html() + "</span></div>").scrollTop($("#output")[0].scrollHeight);
+            $("#output").append("<div class='is-clearfix'><span class='" + cls + "'>" + $("<div />").text(msg).html() + "</span></div>");
         }
+        $("#output").scrollTop($("#output")[0].scrollHeight);
     }
 
     socket.on("message", function(data) {
