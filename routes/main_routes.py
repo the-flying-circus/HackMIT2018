@@ -52,6 +52,7 @@ def register():
     if current_user.is_anonymous:
         return redirect("/login")
     elif request.method == "POST":
+        current_user.nickname = request.form["displayname"]
         current_user.is_mentor = request.form["role"] == "mentor"
         db.session.commit()
         return redirect("/chat")
