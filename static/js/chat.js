@@ -3,15 +3,17 @@ $(document).ready(function() {
     var socket = io();
 
     $.get("/chat/conversations", function(data) {
-        currentRecipient = data.data[0];
+        if (data.data.length > 0) {
+            currentRecipient = data.data[0];
 
-        $("#partner").text(currentRecipient);
+            $("#partner").text(currentRecipient);
 
-        $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
-            data.data.forEach(function(item) {
-                showMessage("msg" + (item.sender == data.id ? " " : " other"), item.message);
+            $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
+                data.data.forEach(function(item) {
+                    showMessage("msg" + (item.sender == data.id ? " " : " other"), item.message);
+                });
             });
-        });
+        }
     });
 
     function showMessage(cls, msg) {
@@ -34,7 +36,7 @@ $(document).ready(function() {
 
     $("#input").keydown(function(e) {
         var val = $(this).val();
-        if (e.which == 13 && val) {
+        if (e.which == 13 && val && currentRecipient) {
             e.preventDefault();
             sendMessage(val);
             $(this).val("");
