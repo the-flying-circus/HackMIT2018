@@ -84,12 +84,13 @@ def pair_mentor():
     return jsonify({"success": True})
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout():
     logout_user()
+    return redirect("/")
 
 
-@app.route('/destroy')
+@app.route('/destroy', methods=['POST'])
 def destroy():
     cons = Conversation.findWith(current_user.social_id)
     for con in cons:
@@ -97,3 +98,4 @@ def destroy():
     current_user.delete()
     logout_user()
     db.session.commit()
+    return redirect("/")
