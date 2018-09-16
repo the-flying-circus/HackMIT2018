@@ -9,6 +9,7 @@ class User(UserMixin, db.Model):
     nickname = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(64), nullable=True)
     access_token = db.Column(db.String(180), nullable=True, unique=True)
+    is_mentor = db.Column(db.Boolean(), nullable=True)
 
 
 class Message(UserMixin, db.Model):
