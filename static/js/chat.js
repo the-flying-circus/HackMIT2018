@@ -5,6 +5,8 @@ $(document).ready(function() {
     $.get("/chat/conversations", function(data) {
         currentRecipient = data.data[0];
 
+        $("#partner").text(currentRecipient);
+
         $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
             data.data.forEach(function(item) {
                 showMessage("msg" + (item.sender == data.id ? " " : " other"), item.message);
