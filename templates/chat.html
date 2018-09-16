@@ -30,7 +30,9 @@
             </div>
             <hr />
             <div id="peers"></div>
+            {% if current_user.is_mentor == False %}
             <div id="find" class="peer"><i class="fa fa-plus"></i> Find a Partner</div>
+            {% endif %}
         </div>
     </div>
     <div class="column is-three-quarters">
