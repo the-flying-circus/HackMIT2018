@@ -1,4 +1,6 @@
 from flask_login import UserMixin
+from sqlalchemy import or_
+
 from app import db, lm
 
 
@@ -44,6 +46,11 @@ class Conversation(db.Model):
 
     def __repr__(self):
         return 'Conversation(id={}, mentor={}, mentee={})'.format(self.id, self.mentor, self.mentee)
+
+    @staticmethod
+    def findWith(user):
+        # finds all the conversations involving a user
+        return Conversation.query.filter(or_(Conversation.mentor == user, Conversation.mentee == user)).all()
 
 
 @lm.user_loader
