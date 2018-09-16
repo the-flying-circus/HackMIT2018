@@ -39,7 +39,7 @@
             <a href="/account" class="link is-info">Account</a>
             </p>
             <p class="level-item has-text-centered">
-            <a href="/info" class="link is-info">Info</a>
+            <a href="#" onclick="event.preventDefault(); $.post('/logout').done(function() { window.location.href='/'; });">Logout</a>
             </p>
         </nav>
         <div class="content">
