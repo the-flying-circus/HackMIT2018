@@ -11,4 +11,4 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 sio = SocketIO(app)
 db = SQLAlchemy(app)
 lm = LoginManager(app)
-lm.login_view = 'index'
+lm.login_view = 'login'
