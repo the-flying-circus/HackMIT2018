@@ -60,7 +60,9 @@ $(document).ready(function() {
     }
 
     socket.on("message", function(data) {
-        showMessage("msg other", data.contents);
+        if (data.owner == currentRecipient) {
+            showMessage("msg other", data.contents);
+        }
     });
 
     function sendMessage(msg) {
