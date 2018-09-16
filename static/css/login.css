@@ -1,5 +1,13 @@
 html, body, .content, .bg-img {
     height: 100%;
+    overflow-y: auto;
+}
+
+.content {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding-top: 96px;
 }
 
 .bg-img {
