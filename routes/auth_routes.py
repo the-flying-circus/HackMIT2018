@@ -95,7 +95,7 @@ def destroy():
     cons = Conversation.findWith(current_user.social_id)
     for con in cons:
         con.delete()
-    User.query.filter_by(social_id=current_user.social_id).first().delete()
+    User.query.filter_by(social_id=current_user.social_id).delete()
     logout_user()
     db.session.commit()
     return redirect("/")
