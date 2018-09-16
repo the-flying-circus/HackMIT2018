@@ -53,6 +53,13 @@ class Conversation(db.Model):
         return Conversation.query.filter(or_(Conversation.mentor == user, Conversation.mentee == user)).all()
 
 
+class Blacklist(db.Model):
+    __tablename__ = 'blacklist'
+    id = db.Column(db.Integer(), primary_key=True)
+    mentee = db.Column(db.ForeignKey("users.social_id"), nullable=False)
+    mentor = db.Column(db.ForeignKey("users.social_id"), nullable=False)
+
+
 @lm.user_loader
 def load_user(key):
     return User.query.get(int(key))

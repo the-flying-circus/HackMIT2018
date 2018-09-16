@@ -2,7 +2,7 @@ from flask import jsonify
 from flask_login import current_user
 
 from app import db, sio, app
-from database import Conversation, User
+from database import Conversation, User, Blacklist
 from services.ibm_personality import PersonalityService
 
 
@@ -18,6 +18,16 @@ def pair_mentor():
     if current_user.is_mentor:
         return jsonify({"error": "Only mentees can request pairing."})
 
+    oldCon = Conversation.query.filter_by(mentee=current_user.social_id).first()
+    if oldCon is not None:
+        # trying to get rid of old mentor
+        bad = oldCon.mentor
+        bl = Blacklist(mentee=current_user.social_id, mentor=bad)
+        db.session.add(bl)
+        Conversation.query.filter_by(mentee=current_user.social_id).delete()
+        db.session.commit()
+        sio.emit('reload', room=bad)
+
     current_traits = {
         "agreeableness": current_user.agreeableness,
         "conscientiousness": current_user.conscientiousness,
@@ -29,7 +39,12 @@ def pair_mentor():
     bestMentor = None
     bestScore = 9999999999
 
+    blacklisted = set(map(lambda x: x.mentor, Blacklist.query.filter_by(mentee=current_user.social_id).all()))
+
     for user in User.query.filter_by(is_mentor=True).all():
+        if user.social_id in blacklisted:
+            continue
+
         involved_cons = Conversation.findWith(user.social_id)
         if len(involved_cons) >= user.max_mentees:
             continue

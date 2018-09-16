@@ -26,6 +26,9 @@ $(document).ready(function() {
 
         if (data.data.length > 0) {
             showConversation(data.data[0]);
+            $("#find").text("Find a new mentor");
+        } else {
+            $("#find").text("Find a Mentor");
         }
     });
 
