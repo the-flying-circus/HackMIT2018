@@ -1,5 +1,6 @@
 from flask import redirect, url_for, flash, jsonify
 from flask_login import current_user, login_user, logout_user
+from sqlalchemy import or_
 
 from app import app, db
 from database import User, Conversation
