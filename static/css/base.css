@@ -1,3 +1,7 @@
+* {
+    font-family: 'Raleway', sans-serif;
+}
+
 #output .msg {
     display: inline-block;
     float: right;
