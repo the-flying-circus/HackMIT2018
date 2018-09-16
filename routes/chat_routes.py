@@ -25,6 +25,12 @@ def send_message(message, recipient):
     db.session.add(message)
     db.session.commit()
 
+    # find if the other side is online
+    other_sid = User.query().filter_by(social_id=recipient).first().id
+    if sio.server.client_manager.is_connected(other_sid, '/chat'):
+        # they are connected!
+        sio.emit('receive', {'sent': timestamp, 'owner': usr, 'recipient': recipient, 'contents': message}, namespace='/chat', room=other_sid)
+
 
 @app.route('/chat/history')
 def getMessages():
