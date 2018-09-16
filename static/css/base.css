@@ -6,14 +6,14 @@
     display: inline-block;
     float: right;
     padding: 5px 8px;
-    border-radius: 3px;
+    border-radius: 16px;
     background-color: #ccc;
     margin: 5px;
 }
 
 #output .msg.other {
     float: left;
-    background-color: #2E7D32;
+    background-color: #116faf;
     color: white;
 }
 
