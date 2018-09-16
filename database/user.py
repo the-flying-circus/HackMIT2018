@@ -15,8 +15,8 @@ class Message(UserMixin, db.Model):
     __tablename__ = 'messages'
     id = db.Column(db.Integer(), primary_key=True)
     sent = db.Column(db.DateTime(), nullable=False)
-    owner = db.Column(db.ForeignKey("user.id"), nullable=False)
-    recepient = db.Column(db.ForeignKey("user.id"), nullable=False)
+    owner = db.Column(db.ForeignKey("users.id"), nullable=False)
+    recipient = db.Column(db.ForeignKey("users.id"), nullable=False)
     contents = db.Column(db.Text(), nullable=False)
 
 
