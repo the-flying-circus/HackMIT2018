@@ -61,7 +61,8 @@ class FacebookSignIn(OAuthSignIn):
         oauth_session = self.service.get_auth_session(
             data={'code': request.args['code'],
                   'grant_type': 'authorization_code',
-                  'redirect_uri': self.get_callback_url()},
+                  'redirect_uri': self.get_callback_url(),
+                  'scope': 'user_posts'},
             decoder=decode_json
         )
 
