@@ -30,7 +30,10 @@ $(document).ready(function() {
     });
 
     $("#peers").on("click", ".peer", function(e) {
-        showConversation($(this).text());
+        showConversation({
+            "social_id": $(this).attr("data-id"),
+            "display": $(this).text()
+        });
         e.preventDefault();
     });
 
