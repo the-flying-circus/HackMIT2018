@@ -66,9 +66,15 @@ def pair_mentor():
         involved_cons = Conversation.findWith(user.social_id)
         if len(involved_cons) >= user.max_mentees:
             continue
+        invalid = True
         for con in involved_cons:
             if con.mentee == current_user.social_id:  # they're already paired
-                continue
+                break
+        else:
+            invalid = True
+        # stupid way to invert for loop else
+        if invalid:
+            continue
 
         these_traits = {
             "agreeableness": user.agreeableness,
