@@ -41,6 +41,10 @@ def info():
 def signup():
     return render_template("signup.html")
 
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
 
 @functools.lru_cache(maxsize=16)
 def get_gifs(query):
