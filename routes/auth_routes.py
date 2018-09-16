@@ -24,6 +24,7 @@ def oauth_callback():
     if social_id is None:
         flash('Authentication failed.')
         return redirect(url_for('index'))
+    print('social id: {}'.format(social_id))
     user = User.query.filter_by(social_id=social_id).first()
     if not user:
         user = User(social_id=social_id, nickname=username, email=email)

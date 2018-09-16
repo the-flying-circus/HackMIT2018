@@ -11,3 +11,4 @@ sio = SocketIO(app)
 db = SQLAlchemy(app)
 db.create_all()
 lm = LoginManager(app)
+lm.login_view = 'index'
