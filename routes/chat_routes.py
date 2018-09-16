@@ -38,7 +38,12 @@ def send_message(message, recipient):
 def get_conversations():
     usr = current_user.social_id
     convos = Conversation.query.filter(or_(Conversation.mentor == usr, Conversation.mentee == usr)).all()
-    return jsonify({"data": [conv.mentor if conv.mentee == usr else conv.mentee for conv in convos]})
+    data = []
+    for conv in convos:
+        other_sid = conv.mentor if conv.mentee == usr else conv.mentee
+        display = User.query.filter_by(social_id=other_sid).first().nickname
+        data.append({'social_id': other_sid, 'display': display})
+    return jsonify({"data": data})
 
 
 @app.route('/chat/history')
