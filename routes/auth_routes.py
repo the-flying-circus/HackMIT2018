@@ -3,7 +3,7 @@ from flask_login import current_user, login_user
 
 from app import app, db
 from oauth import FacebookSignIn
-from Database import User
+from database import User
 
 
 @app.route('/authorize')
