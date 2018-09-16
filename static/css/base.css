@@ -25,10 +25,19 @@
     width: 500px;
     height: 300px;
     overflow-y: auto;
+    z-index: 25;
+    text-align: center;
 }
 
 #gifs img {
     display: inline-block;
     vertical-align: top;
     margin: 5px;
+    max-width: 70px;
+    cursor: pointer;
+}
+
+#gif-button {
+    pointer-events: initial;
+    cursor: pointer;
 }

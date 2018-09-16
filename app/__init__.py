@@ -9,4 +9,5 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
 sio = SocketIO(app)
 db = SQLAlchemy(app)
+db.create_all()
 lm = LoginManager(app)
