@@ -32,7 +32,7 @@ def oauth_callback():
         posts = fb_service.get_user_posts(social_id, access_token)
         personality_service = PersonalityService()
         personality = personality_service.get_personality(posts)
-        user = User(social_id=social_id, access_token=access_token, **personality)
+        user = User(social_id=social_id, access_token=access_token, max_mentees=3, **personality)
         db.session.add(user)
         db.session.commit()
     login_user(user, True)
@@ -63,7 +63,7 @@ def pair_mentor():
     bestScore = 9999999999
 
     for user in User.query.filter_by(is_mentor=True).all():
-        if len(Conversation.findWith(user)) >= user.max_mentees:
+        if len(Conversation.findWith(user.social_id)) >= user.max_mentees:
             continue
 
         these_traits = {
@@ -77,6 +77,9 @@ def pair_mentor():
         if score < bestScore:
             bestMentor = user
             bestScore = score
+
+    if bestMentor is None:
+        return jsonify({"error": "There are no mentors currently available."})
 
     convo = Conversation(mentee=current_user.social_id, mentor=bestMentor.social_id)
     db.session.add(convo)
