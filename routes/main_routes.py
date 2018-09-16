@@ -4,6 +4,7 @@ import functools
 from app import app
 from flask import render_template, request, jsonify
 from database import User
+from flask_login import current_user
 
 from services.secrets import GIPHY_KEY
 
@@ -45,7 +46,8 @@ def login():
 
 @app.route("/dbtest")
 def dbtest():
-    return User.query.filter_by(social_id=1234).first()
+    print('current user: ', current_user.social_id, current_user.access_token)
+    return current_user.access_token
 
 
 @functools.lru_cache(maxsize=16)

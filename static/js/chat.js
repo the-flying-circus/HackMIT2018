@@ -1,11 +1,22 @@
 $(document).ready(function() {
-    function sendMessage(msg) {
+    var socket = io();
+
+    function showMessage(cls, msg) {
         if (/^https?:\/\/media\d+.giphy.com\/media\/[a-zA-Z0-9]+\/giphy-preview.gif$/.test(msg)) {
-            $("#output").append("<div class='is-clearfix'><span class='msg'><img src='" + msg + "' /></span></div>");
+            $("#output").append("<div class='is-clearfix'><span class='" + cls + "'><img src='" + msg + "' /></span></div>");
         }
         else {
-            $("#output").append("<div class='is-clearfix'><span class='msg'>" + $("<div />").text(msg).html() + "</span></div>").scrollTop($("#output")[0].scrollHeight);
+            $("#output").append("<div class='is-clearfix'><span class='" + cls + "'>" + $("<div />").text(msg).html() + "</span></div>").scrollTop($("#output")[0].scrollHeight);
         }
+    }
+
+    socket.on("message", function(data) {
+        showMessage("msg other", data);
+    });
+
+    function sendMessage(msg) {
+        showMessage("msg", msg);
+        socket.emit("message", msg);
     }
 
     $("#input").keydown(function(e) {

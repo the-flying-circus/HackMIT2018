@@ -8,6 +8,16 @@ class User(UserMixin, db.Model):
     social_id = db.Column(db.String(64), nullable=False, unique=True)
     nickname = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(64), nullable=True)
+    access_token = db.Column(db.String(180), nullable=True, unique=True)
+
+
+class Message(UserMixin, db.Model):
+    __tablename__ = 'messages'
+    id = db.Column(db.Integer(), primary_key=True)
+    sent = db.Column(db.DateTime(), nullable=False)
+    owner = db.Column(db.ForeignKey("users.id"), nullable=False)
+    recipient = db.Column(db.ForeignKey("users.id"), nullable=False)
+    contents = db.Column(db.Text(), nullable=False)
 
 
 @lm.user_loader
