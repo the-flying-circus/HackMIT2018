@@ -20,14 +20,13 @@ def oauth_callback():
         return redirect(url_for('index'))
 
     oauth = FacebookSignIn()
-    social_id, username, email = oauth.callback()
+    social_id, username, email, access_token = oauth.callback()
     if social_id is None:
         flash('Authentication failed.')
         return redirect(url_for('index'))
-    print('social id: {}'.format(social_id))
     user = User.query.filter_by(social_id=social_id).first()
     if not user:
-        user = User(social_id=social_id, nickname=username, email=email)
+        user = User(social_id=social_id, nickname=username, email=email, access_token=access_token)
         db.session.add(user)
         db.session.commit()
     login_user(user, True)
