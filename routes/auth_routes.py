@@ -78,6 +78,9 @@ def pair_mentor():
             bestMentor = user
             bestScore = score
 
+    if bestMentor is None:
+        return jsonify({"error": "There are no mentors currently available."})
+
     convo = Conversation(mentee=current_user.social_id, mentor=bestMentor.social_id)
     db.session.add(convo)
     db.session.commit()
@@ -95,7 +98,7 @@ def destroy():
     cons = Conversation.findWith(current_user.social_id)
     for con in cons:
         con.delete()
-    User.query.filter_by(social_id=current_user.social_id).first().delete()
+    User.query.filter_by(social_id=current_user.social_id).delete()
     logout_user()
     db.session.commit()
     return redirect("/")

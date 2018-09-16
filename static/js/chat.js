@@ -37,6 +37,9 @@ $(document).ready(function() {
             if (data.success) {
                 window.location.reload();
             }
+            else if (data.error) {
+                Messenger().error(data.error);
+            }
         });
     });
 
