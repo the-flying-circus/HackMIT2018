@@ -61,7 +61,7 @@ def dbtest():
 @app.route("/fbauthtest")
 def fbtest():
     fb_service = FBService()
-    posts = fb_service.get_user_posts(current_user)
+    posts = fb_service.get_user_posts(current_user.social_id, current_user.access_token)
     return str(posts)
 
 
@@ -69,7 +69,7 @@ def fbtest():
 def fbibmtest():
     fb_service = FBService()
     personality_service = PersonalityService()
-    posts = fb_service.get_user_posts(current_user)
+    posts = fb_service.get_user_posts(current_user.social_id, current_user.access_token)
     personality = personality_service.get_personality(posts)
     pprint(personality)
     return str(personality)

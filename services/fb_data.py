@@ -13,10 +13,9 @@ class FBService:
     def __init__(self):
         self.sess = requests.Session()
 
-    def get_user_posts(self, user):
-        user_id = user.social_id
+    def get_user_posts(self, user_id, access_token):
         params = {
-            "access_token": user.access_token
+            "access_token": access_token
         }
         response = self.sess.get("{}{}/feed".format(FB_USER_ROOT, user_id), params=params)
         posts = response.json()["data"]

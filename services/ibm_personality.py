@@ -29,7 +29,7 @@ class PersonalityService:
             self.sess.headers["content-type"] = "application/json"
             response = self.sess.post(IBM_PI_ROOT, json=data)
         insights = response.json()
-        return {trait["name"]: trait["percentile"] for trait in insights["personality"]}
+        return {trait["name"].lower().replace(' ', '_'): trait["percentile"] for trait in insights["personality"]}
 
     @staticmethod
     def get_compatibility_score(personality_1: dict, personality_2: dict) -> float:
