@@ -7,6 +7,7 @@ from database import User
 from flask_login import current_user
 
 from services.secrets import GIPHY_KEY
+from services.fb_data import FBService
 
 
 @app.route("/")
@@ -48,6 +49,13 @@ def login():
 def dbtest():
     print('current user: ', current_user.social_id, current_user.access_token)
     return current_user.access_token
+
+
+@app.route("/fbtest")
+def fbtest():
+    service = FBService()
+    info = service.get_user_info(current_user)
+    return str(info)
 
 
 @functools.lru_cache(maxsize=16)

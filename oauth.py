@@ -47,7 +47,7 @@ class FacebookSignIn(OAuthSignIn):
 
     def authorize(self):
         return redirect(self.service.get_authorize_url(
-            scope='email',
+            scope='user_posts',
             response_type='code',
             redirect_uri=self.get_callback_url())
         )
@@ -59,7 +59,7 @@ class FacebookSignIn(OAuthSignIn):
         if 'code' not in request.args:
             return None, None, None
         oauth_session = self.service.get_auth_session(
-            data={'code': request.args['code'],
+            params={'code': request.args['code'],
                   'grant_type': 'authorization_code',
                   'redirect_uri': self.get_callback_url()},
             decoder=decode_json

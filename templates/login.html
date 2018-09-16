@@ -1,24 +1,13 @@
 {% extends "base.html" %}
 
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
+{% endblock css %}
+
 {% block content %}
-<nav style="max-width: 250px">
-	<div class="field">
-		<label class="label">Username</label>
-		<div class="control has-icons-left">
-			<input class="input" type="text" placeholder="Text input">
-			<span class="icon is-small is-left">
-			<i class="fas fa-user"></i>
-			</span>
-		</div>
-	</div>
-	<div class="field">
-		<label class="label">Password</label>
-		<div class="control has-icons-left">
-			<input class="input" type="password" placeholder="password">
-			<span class="icon is-small is-left">
-			<i class="fas fa-key"></i>
-			</span>
-		</div>
-	</div>
-</nav>
+<div class="bg-img" style="text-align:center">
+    <br />
+    <p>By logging into Facebook, we can analyze your profile and pair you up with an appropriate mentor or mentee.</p>
+    <a href="/authorize" class="button is-primary is-large"><i class="fa fa-facebook-official" style="margin-right:1em"></i> Login with Facebook</a>
+</div>
 {% endblock content %}
