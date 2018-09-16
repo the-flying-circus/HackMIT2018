@@ -24,7 +24,6 @@ def chat():
 
 
 @app.route("/resources")
-@login_required
 def resources():
     return render_template("resources.html")
 
