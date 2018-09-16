@@ -42,6 +42,7 @@
     cursor: pointer;
 }
 
-nav.level {
+nav.level:not(:last-child) {
     font-size: 1.4em;
+    margin-bottom: 0;
 }
