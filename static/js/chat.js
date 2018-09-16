@@ -30,8 +30,10 @@ $(document).ready(function() {
     });
 
     function sendMessage(msg) {
-        showMessage("msg", msg);
-        socket.emit("message", msg, currentRecipient);
+        if (currentRecipient) {
+            showMessage("msg", msg);
+            socket.emit("message", msg, currentRecipient);
+        }
     }
 
     $("#input").keydown(function(e) {
