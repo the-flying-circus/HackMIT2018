@@ -19,6 +19,13 @@
     margin-bottom: 15px;
 }
 
+#output .meta {
+    color: #888;
+    text-align: center;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
 #gifs {
     display: none;
     position: absolute;
