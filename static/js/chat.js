@@ -28,6 +28,7 @@ $(document).ready(function() {
     $("#gifs").on("click", "img", function(e) {
         e.preventDefault();
         sendMessage($(this).attr("src"));
+        $("#gifs").hide();
     });
 
     $("#gif-button").click(function(e) {
