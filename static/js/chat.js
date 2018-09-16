@@ -3,9 +3,9 @@ $(document).ready(function() {
     var socket = io();
 
     function showConversation(peer) {
-        currentRecipient = peer;
+        currentRecipient = peer.social_id;
 
-        $("#partner").text(currentRecipient);
+        $("#partner").text(peer.display);
 
         $("#output .msg").remove();
         $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
@@ -18,7 +18,7 @@ $(document).ready(function() {
     $.get("/chat/conversations", function(data) {
         $("#peers").children().remove();
         data.data.forEach(function(item) {
-            $("#peers").append($("<div class='peer' />").text(item));
+            $("#peers").append($("<div class='peer' />").text(item.display).attr("data-id", item.social_id));
         });
 
         if (data.data.length > 0) {
@@ -28,6 +28,10 @@ $(document).ready(function() {
 
     $("#peers").on("click", ".peer", function(e) {
         showConversation($(this).text());
+        e.preventDefault();
+    });
+
+    $("#find").click(function(e) {
         e.preventDefault();
     });
 
