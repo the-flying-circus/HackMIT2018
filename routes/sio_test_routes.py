@@ -16,3 +16,8 @@ def handle_async_message(client, message):
     print(string)
     sleep(5)
     emit('async back', string)
+
+
+@sio.on('message')
+def handle_message(message):
+    emit('message', message)
