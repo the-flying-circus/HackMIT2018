@@ -4,21 +4,52 @@
     <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 {% endblock %}
 
+{% block css %}
+    <style>
+    .columns {
+        margin: 10px;
+    }
+    .peer {
+        padding: 5px 8px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .column .box {
+        min-height: 100%;
+    }
+    </style>
+{% endblock %}
+
 {% block content %}
-<div class="box" style="height: 100%; max-width: 800px; margin: 15px auto">
-    <div class="is-clearfix">
-        <h1 class="is-pulled-left">Confidential Chat</h1>
-        <span style="color:#888" class="is-pulled-right">You are chatting with <b id="partner">Unknown</b></span>
+<div class="columns">
+    <div class="column">
+        <div class="box">
+            <div class="is-clearfix">
+                <h1>Peers</h1>
+            </div>
+            <hr />
+            <div id="peers"></div>
+            <div id="find" class="peer"><i class="fa fa-plus"></i> Find a Partner</div>
+        </div>
     </div>
-    <hr />
-    <div id="output">
-        <div class="meta">&ndash; This is the beginning of your chat. &ndash;</div>
-    </div>
-    <div class="control has-icons-right">
-        <input class="input" id="input" placeholder="Type here and press enter..." />
-        <span id="gif-button" class="icon is-small is-right">
-            <i class="fa fa-image"></i>
-        </span>
+    <div class="column is-three-quarters">
+        <div class="box">
+            <div class="is-clearfix">
+                <h1 class="is-pulled-left">Confidential Chat</h1>
+                <span style="color:#888" class="is-pulled-right">You are chatting with <b id="partner">Unknown</b></span>
+            </div>
+            <hr />
+            <div id="output">
+                <div class="meta">&ndash; This is the beginning of your chat. &ndash;</div>
+            </div>
+            <div class="control has-icons-right">
+                <input class="input" id="input" placeholder="Type here and press enter..." />
+                <span id="gif-button" class="icon is-small is-right">
+                    <i class="fa fa-image"></i>
+                </span>
+            </div>
+        </div>
     </div>
 </div>
 <div id="gifs" class="box"></div>

@@ -2,18 +2,37 @@ $(document).ready(function() {
     var currentRecipient = null;
     var socket = io();
 
-    $.get("/chat/conversations", function(data) {
-        if (data.data.length > 0) {
-            currentRecipient = data.data[0];
+    function showConversation(peer) {
+        currentRecipient = peer.social_id;
 
-            $("#partner").text(currentRecipient);
+        $("#partner").text(peer.display);
 
-            $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
-                data.data.forEach(function(item) {
-                    showMessage("msg" + (item.sender == data.id ? " " : " other"), item.message);
-                });
+        $("#output .msg").remove();
+        $.get("/chat/history?other=" + encodeURIComponent(currentRecipient), function(data) {
+            data.data.forEach(function(item) {
+                showMessage("msg" + (item.sender == data.id ? " " : " other"), item.message);
             });
+        });
+    }
+
+    $.get("/chat/conversations", function(data) {
+        $("#peers").children().remove();
+        data.data.forEach(function(item) {
+            $("#peers").append($("<div class='peer' />").text(item.display).attr("data-id", item.social_id));
+        });
+
+        if (data.data.length > 0) {
+            showConversation(data.data[0]);
         }
+    });
+
+    $("#peers").on("click", ".peer", function(e) {
+        showConversation($(this).text());
+        e.preventDefault();
+    });
+
+    $("#find").click(function(e) {
+        e.preventDefault();
     });
 
     function showMessage(cls, msg) {
