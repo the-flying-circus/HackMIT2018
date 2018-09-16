@@ -1,9 +1,9 @@
-from flask import redirect, url_for, flash
+from flask import redirect, url_for, flash, jsonify
 from flask_login import current_user, login_user, logout_user
 
 from app import app, db
-from oauth import FacebookSignIn
 from database import User, Conversation
+from oauth import FacebookSignIn
 from services.fb_data import FBService
 from services.ibm_personality import PersonalityService
 
@@ -12,8 +12,8 @@ from services.ibm_personality import PersonalityService
 def oath_authorize():
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
-    oath = FacebookSignIn()
-    return oath.authorize()
+    oauth = FacebookSignIn()
+    return oauth.authorize()
 
 
 @app.route('/auth-callback')
@@ -36,7 +36,7 @@ def oauth_callback():
         db.session.add(user)
         db.session.commit()
     login_user(user, True)
-    return redirect(url_for('index'))
+    return redirect(url_for('register'))
 
 
 @app.route('/whoami')
@@ -49,15 +49,15 @@ def whoami():
 @app.route('/pair_mentor', methods=["POST"])
 def pair_mentor():
     if current_user.is_mentor:
-        return "Only mentees can request pairing"
+        return jsonify({"error": "Only mentees can request pairing."})
 
     current_traits = {
-                    "agreeableness": current_user.agreeableness,
-                    "conscientiousness": current_user.conscientiousness,
-                    "emotional_range": current_user.emotional_range,
-                    "extraversion": current_user.extraversion,
-                    "openness": current_user.openness
-                }
+        "agreeableness": current_user.agreeableness,
+        "conscientiousness": current_user.conscientiousness,
+        "emotional_range": current_user.emotional_range,
+        "extraversion": current_user.extraversion,
+        "openness": current_user.openness
+    }
 
     bestMentor = None
     bestScore = 9999999999
@@ -67,12 +67,12 @@ def pair_mentor():
             continue
 
         these_traits = {
-                    "agreeableness": user.agreeableness,
-                    "conscientiousness": user.conscientiousness,
-                    "emotional_range": user.emotional_range,
-                    "extraversion": user.extraversion,
-                    "openness": user.openness
-                }
+            "agreeableness": user.agreeableness,
+            "conscientiousness": user.conscientiousness,
+            "emotional_range": user.emotional_range,
+            "extraversion": user.extraversion,
+            "openness": user.openness
+        }
         score = PersonalityService.get_compatibility_score(current_traits, these_traits)
         if score < bestScore:
             bestMentor = user
@@ -81,6 +81,7 @@ def pair_mentor():
     convo = Conversation(mentee=current_user.social_id, mentor=bestMentor.social_id)
     db.session.add(convo)
     db.session.commit()
+    return jsonify({"success": True})
 
 
 @app.route('/logout')

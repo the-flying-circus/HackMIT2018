@@ -33,6 +33,11 @@ $(document).ready(function() {
 
     $("#find").click(function(e) {
         e.preventDefault();
+        $.post("/pair_mentor", function(data) {
+            if (data.success) {
+                window.location.reload();
+            }
+        });
     });
 
     function showMessage(cls, msg) {
