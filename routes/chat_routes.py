@@ -53,7 +53,7 @@ def getMessages():
     if current_user.is_mentor:
         convo = Conversation.query.filter_by(mentor=usr, mentee=other).first()
     else:
-        convo = Conversation.query.filter_by(mentee=other, mentor=usr).first()
+        convo = Conversation.query.filter_by(mentor=other, mentee=usr).first()
     if convo is None:
         return jsonify({"error": "Conversation not found!"})
 
